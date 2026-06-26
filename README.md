@@ -22,7 +22,7 @@ pnpm build
 docker compose up --build
 ```
 
-容器内由 Nginx 托管构建后的静态文件，并支持 SPA fallback。生产环境只需要把唯一域名反向代理到该容器的 80 端口。后续如增加后端 API，应统一挂载在同域名 `/api/*` 路径下。
+容器内由 Nginx 托管构建后的静态文件，并支持 SPA fallback。默认绑定宿主机 `127.0.0.1:39066`，生产环境通过唯一域名的 `/materia-care/` 路径反向代理到该端口。后续如增加后端 API，应统一挂载在同域名 `/materia-care/api/*` 路径下。
 
 ## 数据边界
 

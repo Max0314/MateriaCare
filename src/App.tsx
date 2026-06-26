@@ -17,7 +17,7 @@ import {
   Upload,
   X,
 } from 'lucide-react'
-import { type ChangeEvent, type ComponentType, useEffect, useMemo, useState } from 'react'
+import { type CSSProperties, type ChangeEvent, type ComponentType, useEffect, useMemo, useState } from 'react'
 import './App.css'
 import { categories, dietSuggestions, getHerbById, getSources, herbs, sourceRefs } from './data/herbs'
 import type { CabinetItem, Herb, HerbCategory, Reminder } from './types'
@@ -39,11 +39,26 @@ const navItems: NavItem[] = [
 ]
 
 const routeSet = new Set<Route>(['/', '/identify', '/herbs', '/diet', '/cabinet', '/reminders'])
-const assetImage = '/assets/herb-still-life.png'
+const basePath = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`
+const basePathPrefix = basePath === '/' ? '' : basePath.slice(0, -1)
+const assetImage = `${basePath}assets/herb-still-life.png`
+const appShellStyle = { '--hero-image': `url("${assetImage}")` } as CSSProperties
 
 function getInitialRoute(): Route {
-  const path = window.location.pathname as Route
+  const path = stripBasePath(window.location.pathname) as Route
   return routeSet.has(path) ? path : '/'
+}
+
+function stripBasePath(pathname: string) {
+  if (!basePathPrefix) return pathname
+  if (pathname === basePathPrefix) return '/'
+  if (pathname.startsWith(`${basePathPrefix}/`)) return pathname.slice(basePathPrefix.length) || '/'
+  return pathname
+}
+
+function toBrowserPath(path: Route) {
+  if (!basePathPrefix) return path
+  return path === '/' ? `${basePathPrefix}/` : `${basePathPrefix}${path}`
 }
 
 function makeId(prefix: string) {
@@ -93,7 +108,7 @@ function App() {
 
   const navigate = (path: Route) => {
     setRoute(path)
-    window.history.pushState({}, '', path)
+    window.history.pushState({}, '', toBrowserPath(path))
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
@@ -145,7 +160,7 @@ function App() {
   }
 
   return (
-    <div className="app-shell">
+    <div className="app-shell" style={appShellStyle}>
       <Header route={route} navigate={navigate} />
       <main>
         {route === '/' && <HomePage {...commonProps} />}
