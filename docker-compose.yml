@@ -1,0 +1,9 @@
+services:
+  materia-care:
+    image: materia-care:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    restart: unless-stopped

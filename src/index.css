@@ -1,0 +1,19 @@
+html {
+  scroll-behavior: smooth;
+}
+
+a {
+  color: inherit;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible {
+  outline: 3px solid rgba(40, 124, 70, 0.28);
+  outline-offset: 2px;
+}
+
+::selection {
+  color: #fff;
+  background: #287c46;
+}
